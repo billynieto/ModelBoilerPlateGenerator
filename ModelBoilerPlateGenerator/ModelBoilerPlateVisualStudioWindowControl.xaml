@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="ModelBoilerPlateGenerator.ModelBoilerPlateVisualStudioWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Local="clr-namespace:ModelBoilerPlateGenerator"
+             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+             Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+             mc:Ignorable="d"
+             Name="ModelBoilerPlate">
+    <UserControl.Resources>
+        <DataTemplate x:Key="EnumerationDataTemplate">
+            <StackPanel>
+                <TextBlock Text="Enumeration" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="50" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Name</TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Value</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0">Name</TextBlock>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name}" />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ModelDataTemplate">
+            <StackPanel>
+                <TextBlock Text="Model"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="SettingsDataTemplate">
+            <StackPanel>
+                <TextBlock Text="Settings" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="50" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Name</TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Value</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0">Framework Project</TextBlock>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Settings.FrameworkProjectName}" />
+                    <TextBlock Grid.Row="2" Grid.Column="0">Models Project</TextBlock>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Settings.ModelsProjectName}" />
+                    <TextBlock Grid.Row="3" Grid.Column="0">Repositories Project</TextBlock>
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Settings.RepositoriesProjectName}" />
+                    <TextBlock Grid.Row="4" Grid.Column="0">Test Project</TextBlock>
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Settings.TestProjectName}" />
+                    <TextBlock Grid.Row="5" Grid.Column="0">Integration Tests Project</TextBlock>
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Settings.IntegrationTestsProjectName}" />
+                    <TextBlock Grid.Row="6" Grid.Column="0">Unit Tests Project</TextBlock>
+                    <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Settings.UnitTestsProjectName}" />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+
+        <Local:SubDataTemplateSelector x:Key="SubDataTemplateSelector"
+                                       EnumerationDataTemplate="{StaticResource EnumerationDataTemplate}"
+                                       ModelDataTemplate="{StaticResource ModelDataTemplate}"
+                                       SettingsDataTemplate="{StaticResource SettingsDataTemplate}"/>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Re-Load" Command="{Binding OpenCommand}" />
+            <Button Content="Save" Command="{Binding SaveCommand}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Name="Enumeration" Content="New Enumeration" Command="{Binding NewEnumerationCommand}" />
+            <Button Name="Model" Content="New Model" Command="{Binding NewModelCommand}" />
+            <Button Name="Generate" Content="Generate" Click="generateButton_Click" />
+        </StackPanel>
+        <Line Margin="0,5"/>
+        <TreeView SelectedItemChanged="TreeView_OnSelectedItemChanged" ItemsSource="{Binding RootTreeViewModel.Children}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <Line Margin="0,5"/>
+        <ContentControl Content="{Binding SubViewModel}" ContentTemplateSelector="{StaticResource SubDataTemplateSelector}" Margin="0" />
+    </StackPanel>
+</UserControl>
